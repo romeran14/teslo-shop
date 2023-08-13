@@ -1,5 +1,6 @@
 import Head from "next/head"
 import { FC, PropsWithChildren } from 'react'
+import Navbar from "../ui/Navbar";
 
 interface Props {
     title: string;
@@ -20,7 +21,7 @@ export const ShopLayouts: FC<PropsWithChildren<Props>> = ({ children, title, pag
                 }
             </Head>
             <nav>
-                {/**Navbar */}
+                <Navbar/>
             </nav>
             <main style={{
                 margin: '80px auto',
