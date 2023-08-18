@@ -28,7 +28,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
       >
           <Card>
               <NextLink href="/product/slug" passHref prefetch={ false }>
-                <Link>
+
                     <CardActionArea>
                         <CardMedia 
                             component='img'
@@ -38,7 +38,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
                         />
 
                     </CardActionArea>
-                </Link>
+         
               </NextLink>
               
           </Card>
