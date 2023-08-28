@@ -4,7 +4,7 @@ import { db } from '@/database';
 import { IProduct } from '@/interfaces';
 import { Product } from '@/models';
 
-type Data = | {message: string} | IProduct[]
+type Data = | {message: string} | IProduct[] 
 
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
