@@ -3,11 +3,16 @@ import { FC } from 'react';
 import { Box, Button } from '@mui/material';
 
 interface Props {
-  selectedSize:ISize;
+  selectedSize?:ISize;
   sizes:ISize[];
+
+  //Method
+  onSelectedSize:(size:ISize) => void
 }
 
-export const SizeSelector:FC<Props>= ({selectedSize, sizes}) => {
+export const SizeSelector:FC<Props>= ({selectedSize, sizes, onSelectedSize}) => {
+
+
   return (
     <Box>
         {
@@ -16,6 +21,7 @@ export const SizeSelector:FC<Props>= ({selectedSize, sizes}) => {
             key={size} 
             size='small'
             color={ selectedSize === size ? 'primary':'info'}
+            onClick={()=>onSelectedSize(size)}
             >
                 {size}
             </Button>
