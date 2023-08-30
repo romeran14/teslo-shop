@@ -6,7 +6,10 @@ import { IProduct, ICartProduct, ISize } from '@/interfaces';
 import { NextPage } from 'next';
 import { dbProducts } from '@/database';
 import { GetStaticProps } from 'next'
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { CartContext } from '@/context';
+import { useRouter } from 'next/router';
+
 
 interface Props {
   product: IProduct
@@ -14,8 +17,10 @@ interface Props {
 
 const ProductPage: NextPage<Props> = ({ product }) => {
 
-  /* const router = useRouter()
- 
+  const {addProductToCart} = useContext(CartContext)
+
+   const router = useRouter()
+ /*
    const { products:product, isLoading} = useProducts(`/products/${router.query.slug }`)*/
 
    const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
@@ -45,8 +50,12 @@ const ProductPage: NextPage<Props> = ({ product }) => {
    }
 
    const onAddProduct = () => {
-    tempCartProduct.size ? console.log(tempCartProduct) : null
-    
+   
+    if ( !tempCartProduct.size) {
+      return
+    }
+    addProductToCart(tempCartProduct)
+    router.push('/cart')
    }
 
   return (
