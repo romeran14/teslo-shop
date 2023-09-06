@@ -5,6 +5,8 @@ import { lightTheme } from '@/themes'
 import useSWR, { SWRConfig } from 'swr'
 import UIProvider from '@/context/ui/UiProvider'
 import CartProvider from '@/context/cart/CartProvider'
+import AuthProvider from '@/context/auth/AuthProvider'
+
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -13,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
       }}
     >
+      <AuthProvider>
       <CartProvider>
         <UIProvider>
           <ThemeProvider theme={lightTheme}>
@@ -21,8 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </ThemeProvider>
         </UIProvider>
       </CartProvider>
-
-
+      </AuthProvider>
     </SWRConfig>
   )
 
