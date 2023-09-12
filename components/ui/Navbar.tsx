@@ -92,7 +92,7 @@ const Navbar = () => {
                 >
                     <SearchOutlined />
                 </IconButton>
-                <Link href={'cart'} >
+                <Link href={'/cart'} >
                     <IconButton>
                         <Badge badgeContent={ numberOfItems > 9 ? "+9" : numberOfItems} color="secondary" >
                             <ShoppingCart />

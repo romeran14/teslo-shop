@@ -4,6 +4,7 @@ import { IUser } from '@/interfaces';
 import { tesloApi } from '@/api';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export interface AuthState {
     isLoggedIn:boolean;
@@ -24,15 +25,15 @@ const AuthProvider:FC<PropsWithChildren> = ({children}) => {
         checkToken()
     }, [])
     
+    const router = useRouter()
+
     const checkToken =async ()=>{
-        
+      if (!Cookies.get('token')) {
+        return  
+      }
        
         try {
-           /* const token = Cookies.get('token') ? JSON.parse(Cookies.get('token')!) : ''
-            if (!token) {
-              Cookies.remove('token')
-              return  
-            }*/
+
             const {data} = await tesloApi.get('/user/validate_token')
             const {token:newToken, user } = data
             Cookies.set('token',newToken)
@@ -52,6 +53,13 @@ const AuthProvider:FC<PropsWithChildren> = ({children}) => {
       } catch (error) {
         return false
       }
+    }
+
+    const logout = async ()=>{
+      Cookies.remove('token')
+      Cookies.remove('cart')
+      dispatch({type:'[Auth] - Logout'})
+      router.reload
     }
 
     const registerUser = async (name:string, email:string, password:string ):Promise<{hasError:boolean, message?:string}>=>{
@@ -83,7 +91,8 @@ const AuthProvider:FC<PropsWithChildren> = ({children}) => {
     ...state,
     //Methods
     loginUser,
-    registerUser
+    registerUser,
+    logout
     }}>
     {children}
   </AuthContext.Provider>

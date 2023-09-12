@@ -15,7 +15,11 @@ type FormData = {
   };
 
 const LoginPage = () => {
+
     const router = useRouter()
+    //Destino a pagina de la cual proviene el usuario
+    const destination = router.query.p?.toString() || '/'
+
     const { loginUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
@@ -32,8 +36,8 @@ const onLoginUser = async({email,password}:FormData)=>{
             setshowError(false)
         }, 3000);
     }
-
-    router.replace('/')
+    
+    router.replace(destination)
     
 }
     
@@ -81,7 +85,7 @@ const onLoginUser = async({email,password}:FormData)=>{
                 </Grid>
 
                 <Grid item xs={12} display='flex' justifyContent='end'>
-                    <NextLink href="/auth/register" >
+                    <NextLink  href={`${router.query.p? `/auth/register?p=${router.query.p}`: '/auth/register'}`} >
                         
                             ¿No tienes cuenta?
                        

@@ -9,6 +9,7 @@ export interface CartState {
   subTotal: number;
   tax: number;
   total: number;
+  isLoaded: boolean;
 }
 
 const Cart_INITIAL_STATE: CartState = {
@@ -16,8 +17,8 @@ const Cart_INITIAL_STATE: CartState = {
   numberOfItems: 0,
   subTotal: 0,
   tax: 0,
-  total: 0
-
+  total: 0,
+  isLoaded: false,
 }
 
 
@@ -53,7 +54,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
       total: subTotal * (taxtRate + 1),
     }
 
-    dispatch({type:'[Cart] - Update Order Summary',payload: orderSummary}, )
+    dispatch({ type: '[Cart] - Update Order Summary', payload: orderSummary },)
   }, [state.cart]);
 
   const addProductToCart = (product: ICartProduct) => {
@@ -84,7 +85,7 @@ const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   const removeCartProduct = (product: ICartProduct) => {
-    console.log(product)
+
     dispatch({ type: '[Cart] - Remove Product in cart', payload: product })
   }
 
