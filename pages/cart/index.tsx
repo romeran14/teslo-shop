@@ -34,7 +34,7 @@ const CartPage: NextPage = () => {
                                 <Divider sx={{ my: 1 }}/>
                                 <OrdenSummary/>
                                 <Box sx={{ mt:3 }}>
-                                    <Button color="secondary" className='circular-btn' fullWidth> Checkout</Button>
+                                    <Button href='/checkout/address' color="secondary" className='circular-btn' fullWidth> Checkout</Button>
                                 </Box>
                            
                         </CardContent>
