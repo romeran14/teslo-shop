@@ -66,7 +66,7 @@ const onLoginUser = async({email,password}:FormData)=>{
                     })} label="Correo" variant="filled" fullWidth 
                     error={!!errors.email}
                     helperText={errors.email?.message}
-                    />
+                    >fernando@google.com</TextField>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField {...register('password',{
@@ -75,7 +75,8 @@ const onLoginUser = async({email,password}:FormData)=>{
                     })}
                                         error={!!errors.password}
                                         helperText={errors.password?.message}
-                    label="Contraseña" type='password' variant="filled" fullWidth />
+                    label="Contraseña" type='password' variant="filled" fullWidth >
+                        123456</TextField>
                 </Grid>
 
                 <Grid item xs={12}>

@@ -1,7 +1,7 @@
 import { ShopLayouts } from '@/components/layouts';
 import { TextField, Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Box, Divider } from '@mui/material';
 import { NextPage } from 'next';
-
+import { countries } from '@/utils';
 
 const AddressPage: NextPage = () => {
     return (
@@ -34,20 +34,17 @@ const AddressPage: NextPage = () => {
                     <InputLabel>
                         Pais
                     </InputLabel>
-                    <Select variant='filled' label='Pais' value={1}
+                    <Select variant='filled' label='Pais' value={'cli'}
                     >
-                        <MenuItem value={1}>
-                            Costa Rica
-                        </MenuItem>
-                        <MenuItem value={2}>
-                            Honduras
-                        </MenuItem>
-                        <MenuItem value={3}>
-                            El Salvador
-                        </MenuItem>
-                        <MenuItem value={4}>
-                            Mexico
-                        </MenuItem>
+                        {
+                            countries.map( country =>(
+                                <MenuItem key={country.code} value={country.code}>
+                                {country.name}
+                            </MenuItem>
+                            ))
+                        }
+
+
                     </Select>
                 </FormControl>
             </Grid>
