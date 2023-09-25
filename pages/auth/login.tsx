@@ -69,7 +69,8 @@ const onLoginUser = async({email,password}:FormData)=>{
                     >fernando@google.com</TextField>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField {...register('password',{
+                    <TextField
+                     {...register('password',{
                         required:'Este Campo es requerido',
                         minLength:{value:6, message:"Minimo 6 caracteres"}
                     })}
