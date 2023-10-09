@@ -8,7 +8,8 @@ import { FullScreenLoading } from "@/components/ui"
 
 const Home: NextPage = () => {
 
-   const {products, isError, isLoading} = useProducts('/products',null)
+
+   const {products,  isLoading} = useProducts('/products',null)
 
   return (
     <>

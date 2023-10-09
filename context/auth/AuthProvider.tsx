@@ -5,6 +5,8 @@ import { tesloApi } from '@/api';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useSession, signOut } from 'next-auth/react';
+
 
 export interface AuthState {
     isLoggedIn:boolean;
@@ -19,12 +21,23 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 const AuthProvider:FC<PropsWithChildren> = ({children}) => {
 
-    const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE)
+  const {data, status} = useSession()
+  
+  useEffect(() => {
+    if ( status === "authenticated") {
+      dispatch({type: '[Auth] - Login', payload: data?.user as IUser})
+     console.log(data)
+    }
+  }, [status,data])
+  
 
+    const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE)
+    //SE CAMBIO LA AUTENTICACION A NEXTAUTH
+/* 
     useEffect(() => {
         checkToken()
     }, [])
-    
+  */  
     const router = useRouter()
 
     const checkToken =async ()=>{
@@ -56,10 +69,19 @@ const AuthProvider:FC<PropsWithChildren> = ({children}) => {
     }
 
     const logout = async ()=>{
-      Cookies.remove('token')
+     // Cookies.remove('token')
       Cookies.remove('cart')
+      Cookies.remove('firstName')
+      Cookies.remove('lastName')
+      Cookies.remove('address')
+      Cookies.remove('address2')
+      Cookies.remove('zip')
+      Cookies.remove('city')
+      Cookies.remove('country')
+      Cookies.remove('phone')
       dispatch({type:'[Auth] - Logout'})
-      router.reload
+    //  router.reload
+      signOut()
     }
 
     const registerUser = async (name:string, email:string, password:string ):Promise<{hasError:boolean, message?:string}>=>{

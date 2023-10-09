@@ -2,19 +2,28 @@ import NextLink from 'next/link';
 import { Link, Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material'
 import { ShopLayouts } from '@/components/layouts';
 import { CartList, OrdenSummary } from '@/components/cart';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { CartContext } from '@/context';
 import { countries } from '@/utils';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 const SummaryPage = () => {
-
+    const router = useRouter()
     const {shippingAddress, numberOfItems} = useContext(CartContext)
+
+    useEffect(() => {
+      if ( !Cookies.get('firstName')) {
+        router.push('/checkout/address')
+      }
+    }, [router])
+    
 
     if (!shippingAddress) {
         return <></>
     }
 
-  const country =  useMemo(() => countries.find( item => item.code === shippingAddress.country), [shippingAddress.country])
+  const country =  countries.find( item => item.code === shippingAddress.country)
   const countryName = country?.name
 
   return (
