@@ -7,10 +7,12 @@ import UIProvider from '@/context/ui/UiProvider'
 import CartProvider from '@/context/cart/CartProvider'
 import AuthProvider from '@/context/auth/AuthProvider'
 import { SessionProvider } from "next-auth/react"
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider>
+      <PayPalScriptProvider  options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT || '' }}>
     <SWRConfig
       value={{
         fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
@@ -27,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </CartProvider>
       </AuthProvider>
     </SWRConfig>
+    </PayPalScriptProvider>
     </SessionProvider>
 
   )

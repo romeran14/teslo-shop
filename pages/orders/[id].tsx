@@ -4,13 +4,54 @@ import { ShopLayouts } from '@/components/layouts';
 import { CartList, OrdenSummary } from '@/components/cart';
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { IOrder } from '@/interfaces';
+import { PayPalButtons } from "@paypal/react-paypal-js";
+
+export type OrderResponseBody = {
+    id: string;
+    status:
+        | "COMPLETED"
+        | "SAVED"
+        | "APPROVED"
+        | "VOIDED"
+        | "PAYER_ACTION_REQUIRED"
+        | "CREATED"
+};
 
 interface Props {
     order: IOrder
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
+
+    const router = useRouter();
     const { shippingAddress } = order
+    const [isPaying, setIsPaying] = useState(false);
+
+    const onOrderCompleted = async( details: OrderResponseBody ) => {
+        
+        if ( details.status !== 'COMPLETED' ) {
+            return alert('No hay pago en Paypal');
+        }
+
+        setIsPaying(true);
+
+        try {
+            
+            const { data } = await tesloApi.post(`/orders/pay`, {
+                transactionId: details.id,
+                orderId: order._id
+            });
+
+            router.reload();
+
+        } catch (error) {
+            setIsPaying(false);
+            console.log(error);
+            alert('Error');
+        }
+
+    }
+
     return (
         <ShopLayouts title='Resumen de la orden' pageDescription={'Resumen de la orden'}>
             <Typography variant='h1' component='h1'>Orden: {order._id}</Typography>
@@ -71,7 +112,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                             <Box sx={{ mt: 3 }} display={'flex'} flexDirection={'column'}>
 
                                 {
-                                    !order.isPaid ?
+                                    order.isPaid ?
                                         (
                                             <Chip
                                                 sx={{ my: 2 }}
@@ -80,7 +121,31 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                                 color='success'
                                                 icon={<CreditScoreOutlined />}
                                             />)
-                                        : <h1>Pagar</h1>
+                                        : 
+                                        <PayPalButtons 
+                                        createOrder={(data, actions) => {
+                                            return actions.order.create({
+                                                purchase_units: [
+                                                    {
+                                                        amount: {
+                                                          //  value: `${order.total}`,
+                                                          value: `${2019}`,
+                                                        },
+                                                    },
+                                                ],
+                                            });
+                                        }}
+                                        onApprove={(data, actions) => {
+                                            
+                                            return actions.order!.capture().then((details) => {
+                                                console.log(details)
+                                              //  onOrderCompleted( details );
+                                                // console.log({ details  })
+                                                // const name = details.payer.name.given_name;
+                                                // alert(`Transaction completed by ${name}`);
+                                            });
+                                        }}
+                                    />
 
                                 }
 
@@ -102,6 +167,9 @@ import { GetServerSideProps, NextPage } from 'next'
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { dbOrders } from '@/database';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { tesloApi } from '@/api';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, res }) => {
