@@ -1,6 +1,6 @@
 'use client'
 import { Box, Divider, Drawer, Icon, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, DashboardOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
 import { AuthContext, UIContext } from "@/context"
 import { useContext, useState } from 'react'
 import { useRouter } from "next/router"
@@ -112,11 +112,11 @@ export const SideMenu = () => {
                     {user?.role === 'admin' ? <>
                         <ListSubheader>Admin Panel</ListSubheader>
 
-                        <ListItem >
+                        <ListItem onClick={ () => NavigateTo('/admin/') }  >
                             <ListItemIcon>
-                                <CategoryOutlined />
+                                <DashboardOutlined />
                             </ListItemIcon>
-                            <ListItemText primary={'Productos'} />
+                            <ListItemText primary={'DashBoard'} />
                         </ListItem>
                         <ListItem >
                             <ListItemIcon>

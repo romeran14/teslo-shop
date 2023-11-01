@@ -21,7 +21,9 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 console.log(credentials)
-                return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password)
+               const solve =  await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password)
+               console.log(solve)
+               return solve
             }
 
         }),
@@ -44,6 +46,7 @@ export const authOptions = {
 
     jwt: {},
 
+    
     //Config
     session:{
         maxAge:2592000,/// 30d
