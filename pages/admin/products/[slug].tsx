@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { AdminLayouts } from '../../../components/layouts'
 import { IProduct, ISize, IType } from '../../../interfaces';
@@ -32,7 +32,10 @@ interface Props {
 
 const ProductAdminPage: FC<Props> = ({ product }) => {
 
-    const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm({ defaultValues: product })
+    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm({ defaultValues: product })
+    const [newTag, setNewTag] = useState('')
+
+    const [tags, setTags] = useState(product.tags)
 
     const onChangeSize = (size: ISize) => {
 
@@ -45,13 +48,47 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
         setValue('sizes', [...currentSizes, size], { shouldValidate: true })
     }
 
+    const onNewTag = () => {
+
+        const newTagValue = newTag.trim().toLocaleLowerCase()
+        setNewTag('')
+
+        const currentTags = getValues('tags')
+
+        if (currentTags.includes(newTag)) {
+            return
+        }
+
+        currentTags.push(newTagValue)
+        setTags(currentTags)
+        return setValue('tags', currentTags, { shouldValidate: true })
+
+    }
+
     const onDeleteTag = (tag: string) => {
+        const currentTags = getValues('tags').filter(s => s !== tag)
+        setTags(currentTags)
+        return setValue('tags', currentTags, { shouldValidate: true })
 
     }
 
     const onSubmit = (formData: FormData) => {
         console.log(formData)
     }
+
+    useEffect(() => {
+
+        const subscription = watch((value, { name, type }) => {
+            if (name === 'title') {
+                const newSlug = value.title?.trim()
+                    .replaceAll(' ', '_')
+                    .replaceAll("'", '').toLocaleLowerCase() || '';
+                setValue('slug', newSlug)
+            }
+        })
+        return () => subscription.unsubscribe()
+    }, [watch, setValue])
+
 
     return (
         <AdminLayouts
@@ -206,6 +243,9 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                         <TextField
                             label="Etiquetas"
                             variant="filled"
+                            value={newTag}
+                            onChange={({ target }) => setNewTag(target.value)}
+                            onKeyUp={({ code }) => code === 'Space' ? onNewTag() : undefined}
                             fullWidth
                             sx={{ mb: 1 }}
                             helperText="Presiona [spacebar] para agregar"
@@ -220,7 +260,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                         }}
                             component="ul">
                             {
-                                product.tags.map((tag) => {
+                                tags.map((tag) => {
 
                                     return (
                                         <Chip
