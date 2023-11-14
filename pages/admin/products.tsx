@@ -1,6 +1,6 @@
 import { AdminLayouts } from '@/components/layouts'
-import { CategoryOutlined } from '@mui/icons-material';
-import { CardMedia, Grid } from '@mui/material';
+import { AddOutlined, CategoryOutlined } from '@mui/icons-material';
+import { Box, Button, CardMedia, Grid } from '@mui/material';
 import { NextPage } from 'next';
 import { DataGrid, GridColDef, GridRowsProp, GridRenderCellParams } from '@mui/x-data-grid';
 import {  IProduct, IUser } from '@/interfaces';
@@ -55,6 +55,11 @@ const ProductsPage: NextPage = () => {
 
     return (
         <AdminLayouts title={`Productos (${ data?.length })`} subTitle={'mantenimiento de productos'} icon={<CategoryOutlined />}>
+           <Box display={'flex'} justifyContent={'end'} sx={{ mb:2}}>
+            <Button href='/admin/products/new' color='secondary' startIcon={<AddOutlined/>}>
+                Crear Producto
+            </Button>
+           </Box>
             <Grid container className='fadeIn'>
                 <Grid item xs={12} sx={{ height: 65, width: "100%" }}>
                     <DataGrid

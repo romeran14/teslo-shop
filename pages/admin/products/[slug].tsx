@@ -6,6 +6,9 @@ import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons
 import { dbProducts } from '../../../database';
 import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { tesloApi } from '@/api';
+import { Product } from '@/models';
+import { useRouter } from 'next/router';
 
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats']
@@ -32,8 +35,11 @@ interface Props {
 
 const ProductAdminPage: FC<Props> = ({ product }) => {
 
+    const router = useRouter()
+
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm({ defaultValues: product })
     const [newTag, setNewTag] = useState('')
+    const [isSaving, setisSaving] = useState(false)
 
     const [tags, setTags] = useState(product.tags)
 
@@ -72,8 +78,33 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
     }
 
-    const onSubmit = (formData: FormData) => {
-        console.log(formData)
+    const onSubmit = async (formData: FormData) => {
+
+       
+        if ( formData.images.length < 2 ) return alert('minimo 2 imagenes')
+        setisSaving(true)
+
+        try {
+            const { data } = await tesloApi({
+                url:'/admin/products',
+                method: formData._id ? 'PUT':'POST',
+                data: formData
+            })
+
+            console.log(data)
+
+            if ( !formData._id) {
+                setisSaving(false)
+               router.replace(`/admin/products/${ formData.slug }`)
+               
+            }else{
+                setisSaving(false)
+            }
+            
+        } catch (error) {
+            setisSaving(false)
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -103,6 +134,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                         startIcon={<SaveOutlined />}
                         sx={{ width: '150px' }}
                         type="submit"
+                        disabled={ isSaving }
                     >
                         Guardar
                     </Button>
@@ -334,7 +366,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     const { slug = '' } = query;
 
-    const product = await dbProducts.getProductBySlug(slug.toString());
+    let product:IProduct | null;
+
+    if ( slug === 'new') {
+        const tempProduct = JSON.parse( JSON.stringify( new Product() ));
+        delete tempProduct._id;
+        tempProduct.images = ['img1.jpg','img2.jpg']
+        product = tempProduct
+    }else{
+        product = await dbProducts.getProductBySlug(slug.toString());
+    }
+
+   
 
     if (!product) {
         return {
