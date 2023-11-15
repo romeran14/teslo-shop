@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { AdminLayouts } from '../../../components/layouts'
 import { IProduct, ISize, IType } from '../../../interfaces';
@@ -38,6 +38,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     const router = useRouter()
 
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm({ defaultValues: product })
+    const fileInputRef = useRef<HTMLInputElement>(null)
     const [newTag, setNewTag] = useState('')
     const [isSaving, setisSaving] = useState(false)
 
@@ -78,29 +79,47 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
     }
 
+    const onFileSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+
+        if (!target.files || target.files.length === 0) {
+            return;
+        }
+
+        try {
+            for (const file of Array.from(target.files)) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData);
+                console.log(data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const onSubmit = async (formData: FormData) => {
 
-       
-        if ( formData.images.length < 2 ) return alert('minimo 2 imagenes')
+
+        if (formData.images.length < 2) return alert('minimo 2 imagenes')
         setisSaving(true)
 
         try {
             const { data } = await tesloApi({
-                url:'/admin/products',
-                method: formData._id ? 'PUT':'POST',
+                url: '/admin/products',
+                method: formData._id ? 'PUT' : 'POST',
                 data: formData
             })
 
             console.log(data)
 
-            if ( !formData._id) {
+            if (!formData._id) {
                 setisSaving(false)
-               router.replace(`/admin/products/${ formData.slug }`)
-               
-            }else{
+                router.replace(`/admin/products/${formData.slug}`)
+
+            } else {
                 setisSaving(false)
             }
-            
+
         } catch (error) {
             setisSaving(false)
             console.log(error)
@@ -134,7 +153,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                         startIcon={<SaveOutlined />}
                         sx={{ width: '150px' }}
                         type="submit"
-                        disabled={ isSaving }
+                        disabled={isSaving}
                     >
                         Guardar
                     </Button>
@@ -315,11 +334,19 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                                 color="secondary"
                                 fullWidth
                                 startIcon={<UploadOutlined />}
+                                onClick={() => fileInputRef.current?.click()}
                                 sx={{ mb: 3 }}
                             >
                                 Cargar imagen
                             </Button>
-
+                            <input
+                                ref={fileInputRef}
+                                type='file'
+                                multiple
+                                accept='image/png, image/gif, image/jpeg'
+                                style={{ display: 'none' }}
+                                onChange={onFileSelected}
+                            />
                             <Chip
                                 label="Es necesario al 2 imagenes"
                                 color='error'
@@ -366,18 +393,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     const { slug = '' } = query;
 
-    let product:IProduct | null;
+    let product: IProduct | null;
 
-    if ( slug === 'new') {
-        const tempProduct = JSON.parse( JSON.stringify( new Product() ));
+    if (slug === 'new') {
+        const tempProduct = JSON.parse(JSON.stringify(new Product()));
         delete tempProduct._id;
-        tempProduct.images = ['img1.jpg','img2.jpg']
+        tempProduct.images = ['img1.jpg', 'img2.jpg']
         product = tempProduct
-    }else{
+    } else {
         product = await dbProducts.getProductBySlug(slug.toString());
     }
 
-   
+
 
     if (!product) {
         return {
