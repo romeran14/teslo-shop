@@ -2,6 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, File } from 'formidable';
 import fs from 'fs'
 
+import {v2 as cloudinary} from 'cloudinary'
+
+cloudinary.config( process.env.CLOUDINARY_URL || '');
+
 type Data = {
     message: string
 }
@@ -50,16 +54,19 @@ const parseFiles = async (req: NextApiRequest): Promise<string> => {
 
 const uploadFile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
-    await parseFiles(req)
-    return res.status(200).json({ message: 'Imagen subida' })
+    const imageUrl = await parseFiles(req)
+    return res.status(200).json({ message: imageUrl })
 }
 
 
-const saveFile = async (file: File) => {
+const saveFile = async (file: File):Promise<string> => {
 
-    const data = fs.readFileSync(file.filepath)
-    fs.writeFileSync(`./public/${file.originalFilename}`, data);
-    fs.unlinkSync(file.filepath)
-    return;
+    // const data = fs.readFileSync(file.filepath)
+    // fs.writeFileSync(`./public/${file.originalFilename}`, data);
+    // fs.unlinkSync(file.filepath)
+    // return;
+
+    const { secure_url } = await cloudinary.uploader.upload( file.filepath) 
+    return secure_url
 }
 

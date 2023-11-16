@@ -29,17 +29,20 @@ const returnProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
     const { slug } = req.query;
 
     await db.connect()
-    const productToReturn = await Product.findOne({slug}).lean()
+    const product = await Product.findOne({slug}).lean()
     await db.disconnect()
 
-    if (!productToReturn) {
+    if (!product) {
         return res.status(400).json({ message: 'No hay ese producto' })
     }
 
 
     try {
 
-       res.status(200).json(productToReturn)
+        product.images = product.images.map(image => {
+            return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`
+        })
+       res.status(200).json(product)
 
     } catch (error:any) {
         console.log(error)

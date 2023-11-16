@@ -19,7 +19,7 @@ const CartPage: NextPage = () => {
    }, [isLoaded, cart, router])
    
    if (!isLoaded || cart.length === 0) return (<></>)
-    console.log('ssapo')
+
     return (
         <ShopLayouts title='Carrito - 3' pageDescription='Carrito de compras de la tienda'>
             <Typography variant='h1' component={'h1'}>Carrito</Typography>
