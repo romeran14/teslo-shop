@@ -174,7 +174,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { dbOrders } from '@/database';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { tesloApi } from '@/api';
+import { tesloApi } from '@/axiosApi';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query, res }) => {

@@ -3,7 +3,7 @@ import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from '@
 import { AuthLayout } from '../../components/layouts'
 import { useForm } from 'react-hook-form';
 import { validations } from '@/utils';
-import { tesloApi } from '@/api';
+import { tesloApi } from '@/axiosApi';
 import { ErrorOutline, Route } from '@mui/icons-material';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '@/context';

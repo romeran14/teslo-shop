@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
 import { AuthLayout } from '../../components/layouts'
-import { tesloApi } from '@/api';
+import { tesloApi } from '@/axiosApi';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { validations } from '@/utils';
