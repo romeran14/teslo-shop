@@ -20,9 +20,9 @@ const LoginPage = () => {
 
     const router = useRouter()
     //Destino a pagina de la cual proviene el usuario
- //   const destination = router.query.p?.toString() || '/'
+    const destination = router.query.p?.toString() || '/'
 
-  //  const { loginUser } = useContext(AuthContext)
+    const { loginUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
     const [showError, setshowError] = useState(false)
@@ -40,7 +40,7 @@ const LoginPage = () => {
 const onLoginUser = async({email,password}:FormData)=>{
 
     setshowError(false)
-/*
+
     const isValidLogin = await loginUser(email,password)
     if (!isValidLogin) {
         setshowError(true)
@@ -50,7 +50,7 @@ const onLoginUser = async({email,password}:FormData)=>{
     }
     
     router.replace(destination)
-    */
+    
    signIn('credentials', {email,password})
 }
     
