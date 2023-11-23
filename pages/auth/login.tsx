@@ -20,8 +20,8 @@ const LoginPage = () => {
 
     const router = useRouter()
     //Destino a pagina de la cual proviene el usuario
-    const destination = router.query.p?.toString() || '/'
-
+    const paramDestination = router.query.p?.toString() 
+    const destination = paramDestination ? `/${ paramDestination }` : '/'
     //const { loginUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
@@ -51,7 +51,8 @@ const onLoginUser = async({email,password}:FormData)=>{
     
     // router.replace(destination)
     
-  await signIn('credentials', {email,password})
+ const isSign = await signIn('credentials', {email,password, callbackUrl:destination})
+ console.log('isSign',isSign)
 }
     
   return (
