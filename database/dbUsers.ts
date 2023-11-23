@@ -14,6 +14,7 @@ export const checkUserEmailPassword = async(email:string, password:string)=>{
    }
 
    if ( !bcrypt.compareSync( password, user.password!)) {
+      console.log('no paso el bcrypt')
       return null
    }
 

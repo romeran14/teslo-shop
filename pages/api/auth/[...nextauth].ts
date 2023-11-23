@@ -22,7 +22,7 @@ export const authOptions = {
             async authorize(credentials) {
                 console.log(credentials)
                const solve =  await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password)
-               console.log(solve)
+               console.log('solve',solve)
                return solve
             }
 

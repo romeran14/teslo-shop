@@ -20,8 +20,8 @@ type FormData = {
 const RegisterPage = () => {
 
     const router = useRouter()
-    //const destination = router.query.p?.toString() || '/'
-
+    const destination = router.query.p?.toString() || '/'
+   console.log(destination)
     const { registerUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
@@ -41,9 +41,9 @@ const RegisterPage = () => {
             }, 3000);
             return
         }
-       // router.replace(`..${destination}`)
+        router.replace(`..${destination}`)
        //cons
-       await signIn('credentials',{email,password})
+       //await signIn('credentials',{email,password})
     }
 
 

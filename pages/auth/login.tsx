@@ -22,7 +22,7 @@ const LoginPage = () => {
     //Destino a pagina de la cual proviene el usuario
     const destination = router.query.p?.toString() || '/'
 
-    const { loginUser } = useContext(AuthContext)
+    //const { loginUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
     const [showError, setshowError] = useState(false)
@@ -40,18 +40,18 @@ const LoginPage = () => {
 const onLoginUser = async({email,password}:FormData)=>{
 
     setshowError(false)
-
-    const isValidLogin = await loginUser(email,password)
-    if (!isValidLogin) {
-        setshowError(true)
-        setTimeout(() => {
-            setshowError(false)
-        }, 3000);
-    }
+   //Se comenta porque el login se hace solo con oAuth
+    // const isValidLogin = await loginUser(email,password)
+    // if (!isValidLogin) {
+    //     setshowError(true)
+    //     setTimeout(() => {
+    //         setshowError(false)
+    //     }, 3000);
+    // }
     
-    router.replace(destination)
+    // router.replace(destination)
     
-   signIn('credentials', {email,password})
+  await signIn('credentials', {email,password})
 }
     
   return (
@@ -109,9 +109,10 @@ const onLoginUser = async({email,password}:FormData)=>{
                 <Grid item xs={12} display={'flex'} flexDirection={'column'} justifyContent={'end'}>
                     <Divider sx={{width:'100%',mb:2}}></Divider>
                     {
+                        providers? (
                         Object.values(providers).map((provider:any)=>{
 
-                           if (provider.id=== 'credentials') return(<div key='credentials'></div>)
+                           if (provider.id === 'credentials') return(<div key='credentials'></div>)
 
                            return(
                            <Button
@@ -124,7 +125,7 @@ const onLoginUser = async({email,password}:FormData)=>{
                            >
                             {provider.name}
                            </Button>)
-                        })
+                        })): null
                     }
                 </Grid>
             </Grid>
