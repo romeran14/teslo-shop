@@ -20,8 +20,9 @@ type FormData = {
 const RegisterPage = () => {
 
     const router = useRouter()
-    const destination = router.query.p?.toString() || '/'
-   console.log(destination)
+    const paramDestination = router.query.p?.toString() 
+    const destination = paramDestination ? `/auth/login?p=${ paramDestination }` : '/auth/login'
+   console.log(paramDestination,destination)
     const { registerUser } = useContext(AuthContext)
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
@@ -41,7 +42,7 @@ const RegisterPage = () => {
             }, 3000);
             return
         }
-        router.replace(`..${destination}`)
+        router.push(destination)
        //cons
        //await signIn('credentials',{email,password})
     }
