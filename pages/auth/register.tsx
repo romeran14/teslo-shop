@@ -42,7 +42,11 @@ const RegisterPage = () => {
             }, 3000);
             return
         }
-        router.push(destination)
+        alert('Registrado exitosamente. Seras redirigido al Login')
+        setTimeout(() => {
+            router.push(destination)
+        }, 2000);
+        
        //cons
        //await signIn('credentials',{email,password})
     }
