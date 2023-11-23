@@ -122,7 +122,7 @@ const onLoginUser = async({email,password}:FormData)=>{
                            fullWidth
                            color='primary'
                            sx={{mb:1}}
-                           onClick={()=>signIn(provider.id)}
+                           onClick={()=>signIn(provider.id ,{ callbackUrl:destination })}
                            >
                             {provider.name}
                            </Button>)
